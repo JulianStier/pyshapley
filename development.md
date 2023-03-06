@@ -13,7 +13,7 @@ poetry build
 twine upload dist/*
 ```
 - Create wheel files in *dist/*: ``poetry build``
-- Install wheel in current environment with pip: ``pip install path/to/shapley/dist/shapley-0.1.0-py3-none-any.whl``
+- Install wheel in current environment with pip: ``pip install path/to/pyshapley/dist/pyshapley-0.1.0-py3-none-any.whl``
 
 ## Running CI image locally
 Install latest *gitlab-runner* (version 12.3 or up):

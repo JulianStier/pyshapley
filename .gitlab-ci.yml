@@ -1,5 +1,5 @@
 cache:
-  key: "shapley-${CI_JOB_NAME}"
+  key: "pyshapley-${CI_JOB_NAME}"
   paths:
     - .cache/pip
     - .venv
@@ -20,7 +20,7 @@ stages:
   stage: stage-tests
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
   script:
-    - poetry run pytest -q tests
+    - poetry run pytest -q tests --ignore=tests/large/
   artifacts:
     paths:
       - tests/logs

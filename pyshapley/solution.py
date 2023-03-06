@@ -83,7 +83,7 @@ class Shapley(object):
         :param samples:
         :return:
         """
-        # For n < 5 we have only up to 4! = 24 permutations, so return full shapley
+        # For n < 5 we have only up to 4! = 24 permutations, so return full pyshapley
         # which is computational feasible and needs no approximation
         if len(self._game.players) < 5:
             return self.shapley(player)

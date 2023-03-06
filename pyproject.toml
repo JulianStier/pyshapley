@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "shapley"
+name = "pyshapley"
 version = "0.1.0"
 description = "Library for computing Shapley values of coalitional games"
 authors = [
@@ -14,8 +14,8 @@ include = [
 
 readme = "README.md"
 
-homepage = "https://github.com/JulianStier/shapley"
-repository = "https://github.com/JulianStier/shapley"
+homepage = "https://github.com/JulianStier/pyshapley"
+repository = "https://github.com/JulianStier/pyshapley"
 
 keywords = ["shapley value", "coalitional games", "game theory", "shap"]
 
@@ -43,9 +43,9 @@ lines_between_types = 1
 multi_line_output = 3
 use_parentheses = true
 filter_files = true
-src_paths = ["shapley", "tests"]
+src_paths = ["pyshapley", "tests"]
 skip_glob = ["*/setup.py", "res/"]
-known_first_party = "shapley"
+known_first_party = "pyshapley"
 known_third_party = ["importlib_metadata", "importlib_resources", "pytest", "semantic_version"]
 
 [tool.black]

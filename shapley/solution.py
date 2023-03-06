@@ -1,6 +1,6 @@
+import itertools
 import math
 import random
-import itertools
 
 from . import export
 from .game import CoalitionalGame
@@ -18,7 +18,7 @@ def marginal_coalitions(player, order):
     :rtype (set, set)
     """
     pos_player = order.index(player)
-    return set(order[:pos_player]), set(order[:pos_player + 1])
+    return set(order[:pos_player]), set(order[: pos_player + 1])
 
 
 def marginal_contribution_order(game, player, order):
@@ -30,8 +30,11 @@ def marginal_contribution_order(game, player, order):
     :type order: list
     :return:
     """
-    c1, c2 = marginal_coalitions(player, order)  # e.g. p='a', o=['c', 'b', 'a', 'd'] => c1 = ['c', 'b'] c2 = ['c', 'b', 'a']
-    # return max(0,self.payoff(c2)) - max(0,self.payoff(c1)) # TODO How to deal with negative payoff? How to deal with negative marginal contributions?
+    c1, c2 = marginal_coalitions(
+        player, order
+    )  # e.g. p='a', o=['c', 'b', 'a', 'd'] => c1 = ['c', 'b'] c2 = ['c', 'b', 'a']
+    # TODO How to deal with negative payoff? How to deal with negative marginal contributions?
+    # return max(0,self.payoff(c2)) - max(0,self.payoff(c1))
     # print('c1 = %s, c2 = %s' % (c1, c2))
     return marginal_contribution_set(game, player, c1)
 
@@ -51,19 +54,19 @@ def marginal_contribution_set(game, player, lower_set):
     try:
         higher_set = lower_set | {player}
     except TypeError:
-        raise ValueError('Given set could not be joined with player %s' % player)
+        raise ValueError("Given set could not be joined with player %s" % player)
     marginal_contribution = max(0, game.payoff(higher_set)) - max(0, game.payoff(lower_set))
     return marginal_contribution
 
 
 @export
 class Shapley(object):
-    def __init__(self, game : CoalitionalGame):
+    def __init__(self, game: CoalitionalGame):
         self._game = game
 
     def shapley(self, player):
-        if not player in self._game.players:
-            raise ValueError('No such player in game: %s' % player)
+        if player not in self._game.players:
+            raise ValueError("No such player in game: %s" % player)
         marginals = 0.0
         for order in itertools.permutations(self._game.players):  # e.g. ['c', 'b', 'a']
             marginals += marginal_contribution_order(self._game, player, order)
@@ -72,7 +75,7 @@ class Shapley(object):
     def approx_shapley(self, player, samples):
         return self.approx_shapley_with_subsets(player, samples)
 
-    def approx_shapley_with_permutations(self, player, samples):
+    def approx_shapley_with_permutations(self, player, samples: int):
         """
         Original Shapley value approximation based on random sampling of permutations of players.
 
@@ -80,10 +83,11 @@ class Shapley(object):
         :param samples:
         :return:
         """
-        # For n < 5 we have only up to 4! = 24 permuations, so return full shapley, which is computational feasible and needs no approximation
-        if len(self.players) < 5:
+        # For n < 5 we have only up to 4! = 24 permutations, so return full shapley
+        # which is computational feasible and needs no approximation
+        if len(self._game.players) < 5:
             return self.shapley(player)
-        currentOrder = list(self.players)
+        currentOrder = list(self._game.players)
         marginals = []
         for _ in range(samples):
             # Each sample is a random order from which we take marginal coalitions
@@ -101,14 +105,14 @@ class Shapley(object):
         :param samples:
         :return:
         """
-        if len(self.players) < 5:
+        if len(self._game.players) < 5:
             return self.shapley(player)
 
         weights = []
         marginals = []
         for subset in RandomSubsetGenerator(samples=samples, full_set=self._game.players, except_set={player}):
             marginal_contribution = marginal_contribution_set(self._game, player, subset)
-            weight = (math.factorial(len(subset)) * math.factorial(len(self._game.players) - len(subset) - 1))
+            weight = math.factorial(len(subset)) * math.factorial(len(self._game.players) - len(subset) - 1)
             weights.append(weight)
             marginals.append(marginal_contribution)
         return sum([w * m for (w, m) in zip(weights, marginals)]) / sum(weights)

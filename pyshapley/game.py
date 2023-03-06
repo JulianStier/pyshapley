@@ -1,17 +1,19 @@
 import math
 
+
 class CoalitionalGame(object):
     """
-    Basic interface and implementation for a shapley game. Inherit from this class and implement a specific payoff
-    function, then use game.shapley() or game.approx_shapley() for your computation of a shapley value for a specific
+    Basic interface and implementation for a pyshapley game. Inherit from this class and implement a specific payoff
+    function, then use game.pyshapley() or game.approx_shapley() for your computation of a pyshapley value for a specific
     player.
 
     Interface usage:
     ```python
     game = XyzShapley(players=[1,2,3,4,5,6])
-    s4 = game.approx_shapley(4) # approximate shapley value for player 4
+    s4 = game.approx_shapley(4) # approximate pyshapley value for player 4
     ```
     """
+
     _players = {}  # Access via Shapley#players and Shapley#set_players
     _permutations = None  # Access via Shapley#number_of_permutations
     _lower_bound = None  # Access via Shapley#lower_bound
@@ -69,7 +71,7 @@ class CoalitionalGame(object):
         :return: Contribution value / payoff value for the given coalition.
         :rtype: float
         """
-        return (self.payoff_raw(coalition) - self.lower_bound)
+        return self.payoff_raw(coalition) - self.lower_bound
 
     def payoff_raw(self, coalition):
         """
@@ -78,7 +80,7 @@ class CoalitionalGame(object):
         :type coalition set
         :return:
         """
-        raise NotImplementedError('You should implement this in your shapley-calculation class.')
+        raise NotImplementedError("You should implement this in your pyshapley-calculation class.")
 
 
 class ManualDictGame(CoalitionalGame):
@@ -87,7 +89,7 @@ class ManualDictGame(CoalitionalGame):
         self._payoff_dict = payoff_dict
 
     def payoff(self, coalition):
-        key = ''.join(sorted(coalition))
+        key = "".join(sorted(coalition))
         if key not in self._payoff_dict:
             if len(key) < 1:
                 raise ValueError('No payoff defined for empty set (key = "")')
@@ -131,10 +133,20 @@ class GeneralCouncilGame(CoalitionalGame):
             # n = len(self.players)
             # 5 = len(self._permanents)
             # [(s!)/((s-5-1)!(n-s)!)] * [((s-1)!(n-s)!)/(n!)]
-            self._phi_temp = math.factorial(self._affirmativeCount) / (
-                        math.factorial(self._affirmativeCount - len(self._permanents) - 1) * math.factorial(
-                    len(self.players) - self._affirmativeCount)) * ((math.factorial(self._affirmativeCount - 1) * math.factorial(
-                len(self.players) - self._affirmativeCount)) / math.factorial(len(self.players)))
+            self._phi_temp = (
+                math.factorial(self._affirmativeCount)
+                / (
+                    math.factorial(self._affirmativeCount - len(self._permanents) - 1)
+                    * math.factorial(len(self.players) - self._affirmativeCount)
+                )
+                * (
+                    (
+                        math.factorial(self._affirmativeCount - 1)
+                        * math.factorial(len(self.players) - self._affirmativeCount)
+                    )
+                    / math.factorial(len(self.players))
+                )
+            )
         return self._phi_temp
 
     def _shapley_permanent_member(self):

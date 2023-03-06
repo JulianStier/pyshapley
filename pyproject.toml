@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyshapley"
-version = "0.1.0"
+version = "0.2.0-dev"
 description = "Library for computing Shapley values of coalitional games"
 authors = [
     "Julian Stier <julian.stier@uni-passau.de>"

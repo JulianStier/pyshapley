@@ -21,7 +21,6 @@ class TestSmallDictGames(unittest.TestCase):
         )
         solution = pyshapley.solution.Shapley(game)
 
-        grand_coalitional_payoff = game.payoff(game.players)
         vs = []
         for p in game.players:
             vs.append(solution.shapley(p))
@@ -45,7 +44,6 @@ class TestSmallDictGames(unittest.TestCase):
         )
         solution = pyshapley.solution.Shapley(game)
 
-        grand_coalitional_payoff = game.payoff(game.players)
         vs = []
         for p in game.players:
             vs.append(solution.shapley(p))
@@ -53,7 +51,7 @@ class TestSmallDictGames(unittest.TestCase):
 
         print("-")
 
-        #self.assertAlmostEqual(grand_coalitional_payoff, sum(vs))
+        # self.assertAlmostEqual(grand_coalitional_payoff, sum(vs))
 
     def test_three_player_dict_game3(self):
         game = pyshapley.game.ManualDictGame(
@@ -101,11 +99,8 @@ class TestSmallDictGames(unittest.TestCase):
         )
         solution = pyshapley.solution.Shapley(game)
 
-        grand_coalitional_payoff = game.payoff(game.players)
         vs = []
         for p in game.players:
             vs.append(solution.shapley(p))
             print("phi(%s) = %.4f" % (p, solution.shapley(p)))
         print("-")
-
-        #self.assertAlmostEqual(grand_coalitional_payoff, sum(vs))
